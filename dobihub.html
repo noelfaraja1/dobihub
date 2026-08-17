@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DobiHub — Jukwaa la Dobi Tanzania</title>
+<style>
+  :root{
+    --navy:#0B2447;        /* deep harbour night */
+    --blue:#1D6FE0;        /* primary DobiHub blue */
+    --blue-dark:#144FA6;
+    --sky:#EAF2FD;         /* light background */
+    --cyan:#7EB8FF;
+    --coral:#E8604C;       /* express / warnings */
+    --ink:#0B2447;
+    --slate:#5B6B80;
+    --line:#D7E3F4;
+    --white:#FFFFFF;
+    --green:#1B9E6B;
+    --rose:#D64560;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Roboto,'Noto Sans',sans-serif;background:#CFE0F5;color:var(--ink)}
+  .app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--sky);position:relative;display:flex;flex-direction:column}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select{font-family:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--white);width:100%;color:var(--ink)}
+  input:focus,select:focus{outline:2px solid var(--blue);outline-offset:-1px}
+  .lbl{display:block;font-size:11px;font-weight:700;color:var(--slate);margin-bottom:4px}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:12px}
+  .btn{display:block;width:100%;padding:11px;border-radius:10px;font-weight:700;font-size:14px;text-align:center}
+  .btn-blue{background:var(--blue);color:#fff}
+  .btn-navy{background:var(--navy);color:#fff}
+  .btn-ghost{border:1px solid var(--line);color:var(--slate);background:var(--white)}
+  .btn[disabled]{background:#B9C6D8;color:#fff;cursor:not-allowed}
+  .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+  .row{display:flex;align-items:center;gap:8px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .sec-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin:14px 0 8px}
+  .muted{color:var(--slate);font-size:12px}
+  .mono{font-family:ui-monospace,'SF Mono',Menlo,monospace}
+
+  /* ── Header ── */
+  .hdr{background:var(--navy);color:#fff;padding:18px 16px 14px;border-radius:0 0 20px 20px}
+  .hdr .tag{font-size:10px;letter-spacing:.25em;color:var(--cyan);font-weight:700}
+  .hdr h1{font-size:17px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chip{font-size:10px;font-weight:800;border:1px solid rgba(255,255,255,.35);color:#fff;padding:4px 9px;border-radius:99px}
+  .lang{display:flex;border:1px solid rgba(255,255,255,.35);border-radius:99px;overflow:hidden}
+  .lang.light{border-color:var(--line)}
+  .lang button{font-size:10px;font-weight:800;padding:4px 10px;text-transform:uppercase;color:rgba(255,255,255,.7)}
+  .lang.light button{color:var(--slate)}
+  .lang button.on{background:var(--blue);color:#fff}
+
+  /* ── Hero (Dar es Salaam) ── */
+  .hero{position:relative;background:linear-gradient(180deg,#0B2447 0%,#144FA6 45%,#1D6FE0 78%,#7EB8FF 100%);color:#fff;overflow:hidden;padding:44px 24px 0}
+  .hero .brand{font-size:38px;font-weight:900;letter-spacing:-.02em}
+  .hero .brand span{color:var(--cyan)}
+  .hero p{margin-top:10px;font-size:14px;line-height:1.55;color:#DCE9FB;max-width:34ch}
+  .hero .flat{margin-top:14px;background:rgba(255,255,255,.12);border:1px solid rgba(126,184,255,.5);border-radius:10px;padding:9px 12px;font-size:13px;color:#EAF2FD}
+  .hero .city{font-size:11px;letter-spacing:.3em;font-weight:700;color:var(--cyan);margin-top:22px;text-align:center}
+  .skyline{display:block;width:100%;margin-top:6px}
+  .sheet{background:var(--sky);border-radius:24px 24px 0 0;padding:22px 20px 40px;margin-top:-6px;position:relative;z-index:2}
+  .role{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+  .role:active{border-color:var(--blue)}
+  .role .ic{font-size:24px}
+  .role b{display:block;font-size:15px}
+  .role small{color:var(--slate);font-size:12px}
+  .role .arrow{margin-left:auto;color:var(--blue);font-weight:900}
+
+  main{flex:1;padding:16px 16px 96px}
+  main.nopad{padding-bottom:32px}
+
+  /* ── Order tag card ── */
+  .tagcard{position:relative;background:var(--white);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 2px rgba(11,36,71,.05)}
+  .tagcard .hole{position:absolute;top:13px;left:12px;width:12px;height:12px;border:2px solid #B9C9E0;border-radius:99px;background:var(--sky)}
+  .tagcard .top{padding:12px 12px 8px 34px;display:flex;justify-content:space-between;gap:8px}
+  .perf{border-top:1px dashed #B9C9E0;margin:0 12px}
+  .tagcard .bot{padding:8px 12px 10px;display:flex;flex-direction:column;gap:8px}
+  .oid{font-size:11px;letter-spacing:.15em;color:#8AA0BC}
+  .price{font-weight:800;font-size:14px}
+  .stagebar{display:flex;align-items:center;gap:3px;margin:4px 0}
+  .dot{width:9px;height:9px;border-radius:99px;background:#D7E3F4;flex:none}
+  .dot.on{background:var(--blue)}
+  .link{flex:1;height:2px;background:#D7E3F4}
+  .link.on{background:var(--blue)}
+  .qrbox{display:flex;gap:12px;align-items:center;background:var(--sky);border-radius:10px;padding:10px}
+  .qr{background:#fff;border:1px solid var(--line);border-radius:6px;padding:5px;flex:none}
+  .qr .g{display:grid;grid-template-columns:repeat(9,7px);grid-auto-rows:7px}
+  .qr .c{background:var(--navy)}
+  .qr .id{font-size:8px;text-align:center;letter-spacing:.15em;margin-top:3px}
+
+  /* ── Stats / bars ── */
+  .stat{padding:12px 6px;text-align:center}
+  .stat b{font-size:19px;display:block}
+  .stat small{font-size:10.5px;color:var(--slate);line-height:1.2;display:block;margin-top:2px}
+  .loadbar{height:8px;background:#E4EDF9;border-radius:99px;overflow:hidden}
+  .loadbar i{display:block;height:100%;border-radius:99px;background:var(--blue)}
+  .loadbar i.hot{background:var(--coral)}
+  .chart{display:flex;align-items:flex-end;gap:6px;height:110px}
+  .chart .bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+  .chart .bar{width:100%;border-radius:6px 6px 0 0;background:#C6D8F0}
+  .chart .bar.today{background:var(--blue)}
+  .chart small{font-size:9px;color:var(--slate)}
+
+  /* ── Sub tab strips ── */
+  .strip{display:flex;gap:4px;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:4px;margin-bottom:12px}
+  .strip button{flex:1;padding:7px 4px;border-radius:7px;font-size:12px;font-weight:700;color:var(--slate)}
+  .strip button.on{background:var(--blue);color:#fff}
+
+  /* ── Stepper ── */
+  .step{display:flex;align-items:center;gap:8px}
+  .step button{width:28px;height:28px;border-radius:8px;font-weight:900;font-size:15px}
+  .step .minus{border:1px solid var(--line);color:var(--slate)}
+  .step .plus{background:var(--blue);color:#fff}
+  .step span{width:22px;text-align:center;font-weight:700;font-size:14px}
+  .itemrow{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #EDF3FB}
+  .itemrow:last-child{border-bottom:none}
+
+  /* ── Bottom nav ── */
+  nav.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--white);border-top:1px solid var(--line);display:flex;z-index:50}
+  nav.bottom button{flex:1;padding:9px 0 10px;text-align:center;color:#93A6BE}
+  nav.bottom button.on{color:var(--blue)}
+  nav.bottom .ic{font-size:16px;font-weight:800;line-height:1}
+  nav.bottom small{font-size:9.5px;font-weight:700;display:block;margin-top:2px}
+
+  .notif{display:flex;gap:9px;padding:10px 12px;margin-bottom:8px}
+  .banner{background:#E4F6EC;border:1px solid #9ED9BC;color:#157347;border-radius:10px;padding:9px 12px;font-size:13px;font-weight:700;margin-bottom:10px}
+  .task{display:flex;align-items:center;gap:11px;padding:12px;margin-bottom:9px}
+  .stopnum{width:32px;height:32px;border-radius:99px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none}
+  .warn{color:var(--coral);font-size:11px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+// ═══ DobiHub · HTML edition · Blue rebrand · Dar es Salaam hero ═══
+const TZS = n => "TZS " + Number(n).toLocaleString("en-US");
+const FEE = 50000;
+
+// ─── i18n ────────────────────────────────────────────────────────
+const STR = {
+ sw:{welcome:"KARIBU",city:"DAR ES SALAAM · TANZANIA",
+  tagline:"Jukwaa la kidijitali kwa kila biashara ya dobi Tanzania — oda, matawi, madereva, wateja na malipo, yote kwa simu yako.",
+  flat:`Bei tambarare tu — ada ya uunganishaji ${TZS(FEE)} (mara moja). Hakuna makato kwenye oda zako.`,
+  pickRole:"Chagua mtazamo", roleBiz:"Biashara", roleCust:"Mteja", roleDriver:"Dereva",
+  roleBizD:"Endesha oda, duka na takwimu", roleCustD:"Weka oda, fuatilia, lipa", roleDriverD:"Chukua na wasilisha nguo",
+  demo:"Akaunti ya majaribio", switchRole:"Badili",
+  tabs:{dash:"Nyumbani",orders:"Oda",shop:"Duka",stats:"Takwimu",account:"Akaunti"},
+  ctabs:{book:"Weka oda",track:"Oda zangu",inbox:"Taarifa"},
+  activeOrders:"Oda hai",garmentsIn:"Nguo zilizopo",revenue:"Mapato leo",
+  branchLoad:"Mzigo wa matawi",active:"hai",machines:"mashine",express:"Express — zinahitaji umakini",
+  allBranches:"Matawi yote",allStages:"Hatua zote",newOrder:"+ Oda mpya (POS)",noMatch:"Hakuna oda zinazolingana.",
+  next:"Mbele →",unassigned:"— Haijapangwa —",tag:"Lebo",bag:"Mfuko",
+  customerName:"Jina la mteja",fullName:"Jina kamili",phone:"Simu (SMS/WhatsApp)",branch:"Tawi",
+  garments:"Nguo (bei kwa nguo moja)",orKg:"Au kwa kilo",kg:"kilo",expressSvc:"Huduma ya haraka",
+  total:"Jumla",cancel:"Ghairi",createOrder:"Weka oda",delivery:"Iletwe nyumbani (delivery)",
+  paid:"Imelipwa",unpaid:"Bado",payMpesa:"Lipa kwa M-Pesa",
+  shopSub:{pos:"POS",inv:"Bidhaa",price:"Bei",cust:"Wateja"},
+  posNote:"POS hupokea oda dukani, huchapisha lebo ya QR kwa kila mfuko, na hupokea malipo (M-Pesa, Tigo Pesa, taslimu).",
+  inventory:"Bidhaa za duka",lowStock:"Inakaribia kuisha!",
+  priceRules:"Kanuni za bei",perItem:"Bei kwa nguo moja",perKg:"Bei kwa kilo (mchanganyiko)",
+  expressPct:"Nyongeza ya express (%)",priceNote:"Kila biashara inaweka bei zake — kwa nguo moja au kwa kilo.",
+  addGarment:"Ongeza aina ya nguo",addPh:"mf. Pazia",add:"Ongeza",
+  customers:"Wateja",noPhone:"Hakuna simu",ordersW:"oda",history:"Historia",
+  stats:"Takwimu",rev7:"Mapato — siku 7",machineUtil:"Matumizi ya mashine",repeat:"Wateja wanaorudi",
+  ofCust:"ya wateja wana oda zaidi ya moja",avgOrder:"Wastani wa oda",
+  account:"Akaunti",owner:"Mmiliki",branches:"Matawi",plan:"Kifurushi",
+  nextBilling:"Malipo yajayo: 1 Sep 2026 · M-Pesa",perMonth:"kwa mwezi",
+  feePaid:`Ada ya uunganishaji: imelipwa (${TZS(FEE)}, mara moja)`,logout:"Toka",
+  bookTitle:"Weka oda ya kuchukuliwa",pickupDate:"Tarehe",pickupSlot:"Muda",
+  address:"Anwani ya kuchukulia",addrPh:"mf. Kariakoo, Mtaa wa Swahili 12",
+  bookBtn:"Panga kuchukuliwa",booked:"✓ Oda imepangwa! Dereva atakujia.",
+  myOrders:"Oda zangu",trackNote:"Fuatilia hatua za nguo zako moja kwa moja.",
+  inbox:"Taarifa (SMS / WhatsApp)",noNotifs:"Hakuna taarifa bado.",
+  driver:"Kazi za dereva",pickups:"Kuchukua",deliveries:"Kuwasilisha",
+  routeNote:"Vituo vimepangwa kwa njia fupi zaidi.",pickedUp:"Imechukuliwa ✓",delivered:"Imewasilishwa ✓",
+  noTasks:"Hakuna kazi kwa sasa.",justNow:"Sasa hivi",staff:"Mfanyakazi"},
+ en:{welcome:"WELCOME",city:"DAR ES SALAAM · TANZANIA",
+  tagline:"The digital platform for every laundry business in Tanzania — orders, branches, drivers, customers and payments, all on your phone.",
+  flat:`Flat pricing only — one-time integration fee of ${TZS(FEE)}. No commission on your orders.`,
+  pickRole:"Choose a view", roleBiz:"Business", roleCust:"Customer", roleDriver:"Driver",
+  roleBizD:"Run orders, shop & analytics", roleCustD:"Book, track, pay", roleDriverD:"Pick up & deliver garments",
+  demo:"Demo account", switchRole:"Switch",
+  tabs:{dash:"Home",orders:"Orders",shop:"Shop",stats:"Analytics",account:"Account"},
+  ctabs:{book:"Book",track:"My orders",inbox:"Inbox"},
+  activeOrders:"Active orders",garmentsIn:"Garments in",revenue:"Revenue today",
+  branchLoad:"Branch load",active:"active",machines:"machines",express:"Express — needs attention",
+  allBranches:"All branches",allStages:"All stages",newOrder:"+ New order (POS)",noMatch:"No orders match.",
+  next:"Next →",unassigned:"— Unassigned —",tag:"Tag",bag:"Bag",
+  customerName:"Customer name",fullName:"Full name",phone:"Phone (SMS/WhatsApp)",branch:"Branch",
+  garments:"Garments (price per piece)",orKg:"Or by kilo",kg:"kg",expressSvc:"Express service",
+  total:"Total",cancel:"Cancel",createOrder:"Create order",delivery:"Home delivery",
+  paid:"Paid",unpaid:"Unpaid",payMpesa:"Pay with M-Pesa",
+  shopSub:{pos:"POS",inv:"Inventory",price:"Prices",cust:"Customers"},
+  posNote:"The POS takes walk-in orders, prints a QR tag per bag, and accepts payment (M-Pesa, Tigo Pesa, cash).",
+  inventory:"Shop inventory",lowStock:"Running low!",
+  priceRules:"Pricing rules",perItem:"Price per garment",perKg:"Price per kg (mixed load)",
+  expressPct:"Express surcharge (%)",priceNote:"Each business sets its own prices — per garment or per kg.",
+  addGarment:"Add garment type",addPh:"e.g. Curtain",add:"Add",
+  customers:"Customers",noPhone:"No phone",ordersW:"orders",history:"History",
+  stats:"Analytics",rev7:"Revenue — 7 days",machineUtil:"Machine utilization",repeat:"Repeat customers",
+  ofCust:"of customers have more than one order",avgOrder:"Average order",
+  account:"Account",owner:"Owner",branches:"Branches",plan:"Plan",
+  nextBilling:"Next billing: 1 Sep 2026 · M-Pesa",perMonth:"per month",
+  feePaid:`Integration fee: paid (${TZS(FEE)}, one-time)`,logout:"Log out",
+  bookTitle:"Book a pickup",pickupDate:"Date",pickupSlot:"Time slot",
+  address:"Pickup address",addrPh:"e.g. Kariakoo, Swahili St 12",
+  bookBtn:"Schedule pickup",booked:"✓ Order booked! A driver will come to you.",
+  myOrders:"My orders",trackNote:"Track your garments through every stage.",
+  inbox:"Notifications (SMS / WhatsApp)",noNotifs:"No notifications yet.",
+  driver:"Driver tasks",pickups:"Pickups",deliveries:"Deliveries",
+  routeNote:"Stops are ordered for the shortest route.",pickedUp:"Picked up ✓",delivered:"Delivered ✓",
+  noTasks:"No tasks right now.",justNow:"Just now",staff:"Staff"}
+};
+
+const STAGES=["booked","received","washing","drying","folding","ready","out","done"];
+const SLBL={
+ sw:{booked:"Imepangwa kuchukuliwa",received:"Imepokelewa",washing:"Inafuliwa",drying:"Inakaushwa",folding:"Inakunjwa/pasi",ready:"Tayari",out:"Inasafirishwa",done:"Imekamilika"},
+ en:{booked:"Pickup booked",received:"Received",washing:"Washing",drying:"Drying",folding:"Folding/Iron",ready:"Ready",out:"Out for delivery",done:"Completed"}};
+const SCOL={booked:["#FFF0E1","#B15A16"],received:["#E7EDF5","#44536B"],washing:["#DFF0FF","#12609E"],drying:["#FFF4D6","#8A6A12"],folding:["#EDE7FB","#5B3FA8"],ready:["#E1F6EA","#157347"],out:["#DDE9FF","#1D4FB8"],done:["#EEF2F7","#8393A8"]};
+
+const BIZ={name:"Kariakoo Fresh Laundry",owner:"Halima Juma",plan:"Biashara",planPrice:25000,
+ branches:[{id:"b1",name:"Kariakoo",machines:6},{id:"b2",name:"Mikocheni",machines:4}]};
+const STAFF=["Asha","Peter","Fatuma"];
+const REV=[42000,55500,38000,61000,47500,70000];
+
+// ─── State ───────────────────────────────────────────────────────
+const S={
+ lang:"sw", view:"landing", role:null, tab:"dash", ctab:"track", ssub:"pos",
+ creating:false, showTag:{}, bookedMsg:false, nextNum:2206,
+ rules:{perKg:2500,expressPct:50},
+ garments:[
+  {id:"shirt",name:{sw:"Shati",en:"Shirt"},price:1500},
+  {id:"trouser",name:{sw:"Suruali",en:"Trouser"},price:2000},
+  {id:"dress",name:{sw:"Gauni",en:"Dress"},price:3000},
+  {id:"suit",name:{sw:"Suti (vipande 2)",en:"Suit (2pc)"},price:8000},
+  {id:"bedsheet",name:{sw:"Shuka",en:"Bedsheet"},price:3500},
+  {id:"kitenge",name:{sw:"Kitenge / Kanzu",en:"Kitenge / Gown"},price:4000}],
+ inventory:[
+  {id:"det",name:{sw:"Sabuni ya maji (L)",en:"Liquid detergent (L)"},stock:18,low:10},
+  {id:"soft",name:{sw:"Laini-nguo (L)",en:"Fabric softener (L)"},stock:6,low:8},
+  {id:"bags",name:{sw:"Mifuko ya nguo",en:"Garment bags"},stock:120,low:50},
+  {id:"hang",name:{sw:"Hanga",en:"Hangers"},stock:44,low:30}],
+ orders:[
+  {id:"DH-2201",customer:"Amani S.",phone:"0754 118 220",branch:"b1",items:[{g:"shirt",qty:3},{g:"trouser",qty:2}],kg:0,stage:"washing",express:false,delivery:true,paid:true,staff:"Asha",address:"Kariakoo, Swahili St 12",placed:"Leo 8:15",dist:1.2},
+  {id:"DH-2202",customer:"Neema M.",phone:"0713 400 771",branch:"b1",items:[{g:"dress",qty:2}],kg:0,stage:"folding",express:true,delivery:false,paid:false,staff:"Fatuma",address:"",placed:"Leo 8:40",dist:0},
+  {id:"DH-2203",customer:"Baraka J.",phone:"0684 220 913",branch:"b2",items:[{g:"suit",qty:1},{g:"shirt",qty:4}],kg:0,stage:"booked",express:false,delivery:true,paid:false,staff:null,address:"Mikocheni B, Rose Garden Rd",placed:"Leo 9:05",dist:3.4},
+  {id:"DH-2204",customer:"Zawadi K.",phone:"0765 909 445",branch:"b2",items:[{g:"bedsheet",qty:3}],kg:0,stage:"ready",express:false,delivery:true,paid:true,staff:"Peter",address:"Msasani Peninsula, Toure Dr",placed:"Jana 16:30",dist:5.1},
+  {id:"DH-2205",customer:"Juma R.",phone:"0716 313 556",branch:"b1",items:[],kg:7,stage:"done",express:false,delivery:false,paid:true,staff:"Asha",address:"",placed:"Jana 15:00",dist:0}],
+ notifs:[{text:"Karibu DobiHub! Oda DH-2203 imepangwa kuchukuliwa.",time:"9:05",ch:"sms"}],
+ // form buffers
+ pos:{customer:"",phone:"",branch:"b1",express:false,delivery:false,address:"",kg:0,qty:{}},
+ book:{address:"",date:"Leo",slot:"14:00 – 16:00",qty:{}},
+ filt:{branch:"all",stage:"all"},
+ newG:{name:"",price:""}
+};
+const T=()=>STR[S.lang];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// ─── Logic ───────────────────────────────────────────────────────
+function total(o){
+ const items=(o.items||[]).reduce((s,it)=>{const g=S.garments.find(x=>x.id===it.g);return s+(g?g.price*it.qty:0)},0);
+ const base=items+(o.kg||0)*S.rules.perKg;
+ return o.express?Math.round(base*(1+S.rules.expressPct/100)):base;
+}
+function itemsTxt(o){
+ const p=(o.items||[]).map(it=>{const g=S.garments.find(x=>x.id===it.g);return it.qty+"× "+(g?g.name[S.lang]:it.g)});
+ if(o.kg>0)p.push(o.kg+" "+T().kg);
+ return p.join(", ")||"—";
+}
+function notify(id,stage){
+ const msg=S.lang==="sw"?`Oda ${id}: sasa ${SLBL.sw[stage]}. — ${BIZ.name}`:`Order ${id}: now ${SLBL.en[stage]}. — ${BIZ.name}`;
+ S.notifs.unshift({text:msg,time:T().justNow,ch:Math.random()>0.5?"wa":"sms"});
+}
+function setStage(id,st){const o=S.orders.find(x=>x.id===id);if(!o)return;o.stage=st;notify(id,st);render();}
+function advance(id){
+ const o=S.orders.find(x=>x.id===id);if(!o)return;
+ let i=STAGES.indexOf(o.stage),nxt=STAGES[Math.min(i+1,STAGES.length-1)];
+ if(nxt==="out"&&!o.delivery)nxt="done";
+ setStage(id,nxt);
+}
+function togglePaid(id){const o=S.orders.find(x=>x.id===id);o.paid=!o.paid;render();}
+function pay(id){
+ const o=S.orders.find(x=>x.id===id);o.paid=true;
+ S.notifs.unshift({text:S.lang==="sw"?`Malipo ya oda ${id} yamepokelewa kwa M-Pesa. Asante!`:`Payment for order ${id} received via M-Pesa. Thank you!`,time:T().justNow,ch:"sms"});
+ render();
+}
+function assign(id,st){const o=S.orders.find(x=>x.id===id);o.staff=st||null;render();}
+function qrCells(id){
+ let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;
+ const a=[];for(let i=0;i<81;i++){h=(h*1103515245+12345)>>>0;a.push((h>>7)%3!==0)}return a;
+}
+function savePos(){
+ const f=S.pos,items=Object.entries(f.qty).filter(([,q])=>q>0).map(([g,qty])=>({g,qty}));
+ if(!f.customer.trim()||(items.length===0&&!(f.kg>0)))return;
+ S.orders.unshift({id:"DH-"+S.nextNum++,customer:f.customer,phone:f.phone,branch:f.branch,items,kg:f.kg,
+  stage:"received",express:f.express,delivery:f.delivery,paid:false,staff:null,address:f.address,
+  placed:T().justNow,dist:f.delivery?+(1+Math.random()*5).toFixed(1):0});
+ S.pos={customer:"",phone:"",branch:"b1",express:false,delivery:false,address:"",kg:0,qty:{}};
+ S.creating=false;S.tab="orders";render();
+}
+function saveBook(){
+ const f=S.book,items=Object.entries(f.qty).filter(([,q])=>q>0).map(([g,qty])=>({g,qty}));
+ if(!f.address.trim()||items.length===0)return;
+ const id="DH-"+S.nextNum++;
+ S.orders.unshift({id,customer:"Baraka J.",phone:"0684 220 913",branch:"b2",items,kg:0,stage:"booked",
+  express:false,delivery:true,paid:false,staff:null,address:f.address,placed:T().justNow,dist:+(1+Math.random()*5).toFixed(1)});
+ S.notifs.unshift({text:S.lang==="sw"?`Oda ${id} imepangwa kuchukuliwa. Dereva anakuja!`:`Order ${id} booked for pickup. Driver on the way!`,time:T().justNow,ch:"wa"});
+ S.book={address:"",date:"Leo",slot:"14:00 – 16:00",qty:{}};S.bookedMsg=true;render();
+}
+function addGarment(){
+ const n=S.newG.name.trim(),p=Number(S.newG.price);
+ if(!n||!p)return;
+ S.garments.push({id:"g"+Date.now(),name:{sw:n,en:n},price:p});
+ S.newG={name:"",price:""};render();
+}
+
+// ─── UI pieces ───────────────────────────────────────────────────
+const pill=st=>`<span class="pill" style="background:${SCOL[st][0]};color:${SCOL[st][1]}">${SLBL[S.lang][st]}</span>`;
+const paidPill=o=>`<button class="pill" style="background:${o.paid?"#E1F6EA":"#FCE4EA"};color:${o.paid?"#157347":"#B92B4B"}" onclick="togglePaid('${o.id}')">${o.paid?T().paid:T().unpaid}</button>`;
+const langHtml=(light)=>`<div class="lang ${light?"light":""}">
+ <button class="${S.lang==='sw'?'on':''}" onclick="S.lang='sw';render()">SW</button>
+ <button class="${S.lang==='en'?'on':''}" onclick="S.lang='en';render()">EN</button></div>`;
+function qrHtml(o){
+ return `<div class="qrbox"><div class="qr"><div class="g">${qrCells(o.id).map(on=>`<div class="${on?'c':''}"></div>`).join("")}</div><div class="id mono">${o.id}</div></div>
+ <div style="font-size:12px;color:var(--slate)"><b style="color:var(--ink)">${T().bag} · ${esc(o.customer)}</b><br>${esc(itemsTxt(o))}<br><span class="mono" style="letter-spacing:.2em;font-size:10px">▮▯▮▮▯▮▯▮▮▯▮▮▯▮</span></div></div>`;
+}
+function stepper(map,gid,fn){
+ const q=map[gid]||0;
+ return `<div class="step"><button class="minus" onclick="${fn}('${gid}',-1)">−</button><span>${q}</span><button class="plus" onclick="${fn}('${gid}',1)">+</button></div>`;
+}
+function posQty(g,d){S.pos.qty[g]=Math.max(0,(S.pos.qty[g]||0)+d);render()}
+function bookQty(g,d){S.book.qty[g]=Math.max(0,(S.book.qty[g]||0)+d);render()}
+function invAdj(id,d){const it=S.inventory.find(x=>x.id===id);it.stock=Math.max(0,it.stock+d);render()}
+
+// ─── Skyline SVG (Dar es Salaam) ─────────────────────────────────
+function skyline(){
+ return `<svg class="skyline" viewBox="0 0 430 150" xmlns="http://www.w3.org/2000/svg" aria-label="Dar es Salaam skyline">
+  <circle cx="360" cy="34" r="20" fill="#FFD98E" opacity=".9"/>
+  <g fill="#0B2447" opacity=".28"><rect x="8" y="86" width="26" height="64"/><rect x="44" y="70" width="20" height="80"/><rect x="150" y="78" width="30" height="72"/><rect x="262" y="82" width="24" height="68"/><rect x="380" y="88" width="30" height="62"/></g>
+  <g fill="#0B2447">
+   <rect x="24" y="60" width="24" height="90" rx="2"/>
+   <path d="M70 150 V58 l12 -14 12 14 v92 z"/>
+   <rect x="104" y="44" width="18" height="106" rx="2"/><rect x="109" y="34" width="8" height="12"/>
+   <path d="M136 150 V72 q0 -10 10 -10 h14 q10 0 10 10 v78 z"/>
+   <rect x="180" y="26" width="26" height="124" rx="3"/><rect x="188" y="14" width="10" height="14"/><rect x="192" y="6" width="2" height="10"/>
+   <rect x="216" y="52" width="22" height="98" rx="2"/>
+   <path d="M248 150 V64 l14 -18 14 18 v86 z"/>
+   <rect x="286" y="40" width="20" height="110" rx="2"/><rect x="291" y="30" width="10" height="12"/>
+   <path d="M316 150 V90 q16 -26 32 0 v60 z"/>
+   <rect x="356" y="66" width="24" height="84" rx="2"/>
+   <rect x="388" y="78" width="26" height="72" rx="2"/>
+  </g>
+  <g fill="#FFD98E" opacity=".85">
+   <rect x="30" y="70" width="4" height="4"/><rect x="40" y="84" width="4" height="4"/><rect x="108" y="56" width="4" height="4"/><rect x="112" y="72" width="4" height="4"/>
+   <rect x="186" y="40" width="4" height="4"/><rect x="196" y="58" width="4" height="4"/><rect x="186" y="80" width="4" height="4"/>
+   <rect x="222" y="66" width="4" height="4"/><rect x="292" y="52" width="4" height="4"/><rect x="296" y="70" width="4" height="4"/><rect x="362" y="80" width="4" height="4"/>
+  </g>
+  <path d="M0 150 H430" stroke="#06172F" stroke-width="4"/>
+  <g stroke="#EAF2FD" stroke-width="1.4" opacity=".8" fill="none">
+   <path d="M12 132 q6 -10 12 0 M330 128 q5 -8 10 0"/>
+  </g>
+ </svg>`;
+}
+
+// ─── Screens ─────────────────────────────────────────────────────
+function landing(){
+ const t=T();
+ return `<div class="hero">
+   <div class="row" style="justify-content:space-between">
+    <span style="font-size:10px;letter-spacing:.3em;font-weight:700;color:var(--cyan)">${t.welcome}</span>${langHtml(false)}
+   </div>
+   <div class="brand">Dobi<span>Hub</span></div>
+   <p>${t.tagline}</p>
+   <div class="flat">${t.flat}</div>
+   <div class="city">${t.city}</div>
+   ${skyline()}
+ </div>
+ <div class="sheet">
+  <div class="sec-title" style="margin-top:0;color:var(--slate)">${t.pickRole}</div>
+  ${[["biz","🏪",t.roleBiz,t.roleBizD],["cust","🧺",t.roleCust,t.roleCustD],["driver","🛵",t.roleDriver,t.roleDriverD]]
+   .map(([id,ic,l,d])=>`<button class="role" onclick="S.role='${id}';S.view='app';S.tab='dash';render()">
+     <span class="ic">${ic}</span><span><b>${l}</b><small>${d}</small></span><span class="arrow">→</span></button>`).join("")}
+  <p class="muted" style="margin-top:6px">${t.demo}: ${BIZ.name}</p>
+ </div>`;
+}
+
+function header(){
+ const t=T();
+ const who=S.role==="cust"?"Baraka J.":S.role==="driver"?"Dereva · Yusuph":BIZ.name;
+ const roleLbl=S.role==="biz"?t.roleBiz:S.role==="cust"?t.roleCust:t.roleDriver;
+ return `<div class="hdr"><div class="row" style="justify-content:space-between;align-items:flex-start">
+  <div style="min-width:0"><div class="tag">DOBIHUB · ${roleLbl.toUpperCase()}</div><h1>${who}</h1></div>
+  <div class="row"><button class="chip" onclick="S.view='landing';render()">${t.switchRole}</button>${langHtml(false)}</div>
+ </div></div>`;
+}
+
+function tagCard(o){
+ const t=T(),done=o.stage==="done";
+ return `<div class="tagcard"><div class="hole"></div>
+  <div class="top"><div style="min-width:0">
+    <div class="oid mono">${o.id}</div><b>${esc(o.customer)}</b><div class="muted">${esc(o.placed)}</div></div>
+   <div style="text-align:right;flex:none"><div class="price">${TZS(total(o))}</div>
+    <div class="row" style="justify-content:flex-end;margin-top:3px;gap:4px">
+     ${o.express?`<span class="pill" style="background:var(--coral);color:#fff">EXPRESS</span>`:""}${paidPill(o)}</div></div></div>
+  <div class="perf"></div>
+  <div class="bot">
+   <div class="muted">${esc(itemsTxt(o))}</div>
+   <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:6px">
+    <select style="width:auto;font-size:12px;padding:5px 7px" onchange="assign('${o.id}',this.value)">
+     <option value="">${t.unassigned}</option>
+     ${STAFF.map(s=>`<option ${o.staff===s?"selected":""}>${s}</option>`).join("")}</select>
+    <div class="row" style="gap:5px">
+     <button class="pill" style="border:1px solid var(--blue);color:var(--blue)" onclick="S.showTag['${o.id}']=!S.showTag['${o.id}'];render()">⧉ ${t.tag}</button>
+     ${pill(o.stage)}
+     ${done?"":`<button class="pill" style="background:var(--blue);color:#fff" onclick="advance('${o.id}')">${t.next}</button>`}
+    </div></div>
+   ${S.showTag[o.id]?qrHtml(o):""}
+  </div></div>`;
+}
+
+function bizDash(){
+ const t=T();
+ const active=S.orders.filter(o=>o.stage!=="done");
+ const rev=S.orders.filter(o=>o.placed.startsWith("Leo")||o.placed===t.justNow).reduce((s,o)=>s+total(o),0);
+ const gc=S.orders.reduce((s,o)=>s+(o.items||[]).reduce((a,i)=>a+i.qty,0),0);
+ return `<div class="grid3">
+  ${[[t.activeOrders,active.length],[t.garmentsIn,gc],[t.revenue,TZS(rev).replace("TZS ","")]]
+   .map(([l,v])=>`<div class="card stat"><b>${v}</b><small>${l}</small></div>`).join("")}</div>
+ <div class="sec-title">${t.branchLoad}</div>
+ ${BIZ.branches.map(b=>{
+  const n=S.orders.filter(o=>o.branch===b.id&&!["done","booked"].includes(o.stage)).length;
+  const load=Math.min(100,Math.round(n/b.machines*100));
+  return `<div class="card" style="padding:12px;margin-bottom:8px">
+   <div class="row" style="justify-content:space-between;margin-bottom:6px"><b>${b.name}</b>
+    <span class="muted">${n} ${t.active} · ${b.machines} ${t.machines}</span></div>
+   <div class="loadbar"><i class="${load>70?"hot":""}" style="width:${load}%"></i></div></div>`}).join("")}
+ <div class="sec-title">${t.express}</div>
+ ${S.orders.filter(o=>o.express&&o.stage!=="done").map(o=>
+  `<div class="card row" style="justify-content:space-between;padding:10px 12px;margin-bottom:8px;border-color:#F3C4BB;background:#FDF1EF">
+   <b style="font-size:13px">${o.id} · ${esc(o.customer)}</b>${pill(o.stage)}</div>`).join("")||`<p class="muted">—</p>`}`;
+}
+
+function bizOrders(){
+ const t=T(),f=S.filt;
+ const list=S.orders.filter(o=>(f.branch==="all"||o.branch===f.branch)&&(f.stage==="all"||o.stage===f.stage));
+ return `<div class="grid2" style="margin-bottom:10px">
+  <select onchange="S.filt.branch=this.value;render()">
+   <option value="all">${t.allBranches}</option>
+   ${BIZ.branches.map(b=>`<option value="${b.id}" ${f.branch===b.id?"selected":""}>${b.name}</option>`).join("")}</select>
+  <select onchange="S.filt.stage=this.value;render()">
+   <option value="all">${t.allStages}</option>
+   ${STAGES.map(s=>`<option value="${s}" ${f.stage===s?"selected":""}>${SLBL[S.lang][s]}</option>`).join("")}</select></div>
+ <button class="btn btn-navy" style="margin-bottom:12px" onclick="S.creating=true;render()">${t.newOrder}</button>
+ ${list.length?list.map(tagCard).join(""):`<p class="muted" style="text-align:center;padding:24px 0">${t.noMatch}</p>`}`;
+}
+
+function garmentPicker(qtyMap,fn,limit){
+ const gs=limit?S.garments.slice(0,limit):S.garments;
+ return `<div class="card">${gs.map(g=>`<div class="itemrow">
+  <div><div style="font-size:14px;font-weight:600">${esc(g.name[S.lang])}</div><div class="muted">${TZS(g.price)}</div></div>
+  ${stepper(qtyMap,g.id,fn)}</div>`).join("")}</div>`;
+}
+
+function pos(){
+ const t=T(),f=S.pos;
+ const items=Object.entries(f.qty).filter(([,q])=>q>0).map(([g,qty])=>({g,qty}));
+ const tot=total({items,kg:f.kg,express:f.express});
+ const valid=f.customer.trim()&&(items.length||f.kg>0);
+ return `<h2 style="font-size:18px;margin-bottom:12px">${t.newOrder.replace("+ ","")}</h2>
+ <label class="lbl">${t.customerName}</label>
+ <input value="${esc(f.customer)}" placeholder="${t.fullName}" oninput="S.pos.customer=this.value;posSoft()">
+ <div class="grid2" style="margin-top:10px">
+  <div><label class="lbl">${t.phone}</label><input value="${esc(f.phone)}" placeholder="07xx xxx xxx" oninput="S.pos.phone=this.value"></div>
+  <div><label class="lbl">${t.branch}</label><select onchange="S.pos.branch=this.value">
+   ${BIZ.branches.map(b=>`<option value="${b.id}" ${f.branch===b.id?"selected":""}>${b.name}</option>`).join("")}</select></div></div>
+ <label class="lbl" style="margin-top:10px">${t.garments}</label>
+ ${garmentPicker(f.qty,"posQty")}
+ <label class="lbl" style="margin-top:10px">${t.orKg} (${TZS(S.rules.perKg)}/${t.kg})</label>
+ <input type="number" min="0" value="${f.kg||""}" oninput="S.pos.kg=Number(this.value)||0;posSoft()">
+ <label class="row" style="margin-top:10px;font-size:14px"><input type="checkbox" style="width:auto" ${f.express?"checked":""} onchange="S.pos.express=this.checked;render()"> ${t.expressSvc} (+${S.rules.expressPct}%)</label>
+ <label class="row" style="margin-top:6px;font-size:14px"><input type="checkbox" style="width:auto" ${f.delivery?"checked":""} onchange="S.pos.delivery=this.checked;render()"> ${t.delivery}</label>
+ ${f.delivery?`<label class="lbl" style="margin-top:8px">${t.address}</label><input value="${esc(f.address)}" placeholder="${t.addrPh}" oninput="S.pos.address=this.value">`:""}
+ <div class="card row" style="justify-content:space-between;padding:10px 12px;margin-top:12px">
+  <span class="muted">${t.total}</span><b id="postot">${TZS(tot)}</b></div>
+ <div class="grid2" style="margin-top:10px">
+  <button class="btn btn-ghost" onclick="S.creating=false;render()">${t.cancel}</button>
+  <button class="btn btn-blue" ${valid?"":"disabled"} onclick="savePos()">${t.createOrder}</button></div>`;
+}
+function posSoft(){ // update total without full rerender (keeps input focus)
+ const f=S.pos,items=Object.entries(f.qty).filter(([,q])=>q>0).map(([g,qty])=>({g,qty}));
+ const el=document.getElementById("postot");if(el)el.textContent=TZS(total({items,kg:f.kg,express:f.express}));
+}
+
+function shop(){
+ const t=T(),sub=S.ssub;
+ let body="";
+ if(sub==="pos")body=`<button class="btn btn-navy" onclick="S.creating=true;render()">${t.newOrder}</button>
+  <div class="card" style="padding:12px;margin-top:10px;font-size:13px;color:var(--slate)">${t.posNote}</div>`;
+ if(sub==="inv")body=`<div class="sec-title" style="margin-top:0">${t.inventory}</div>`+
+  S.inventory.map(it=>`<div class="card row" style="justify-content:space-between;padding:10px 12px;margin-bottom:8px">
+   <div><div style="font-size:14px;font-weight:600">${it.name[S.lang]}</div>${it.stock<=it.low?`<div class="warn">⚠ ${t.lowStock}</div>`:""}</div>
+   <div class="step"><button class="minus" onclick="invAdj('${it.id}',-1)">−</button><span style="width:30px">${it.stock}</span><button class="plus" onclick="invAdj('${it.id}',1)">+</button></div></div>`).join("");
+ if(sub==="price")body=`<div class="sec-title" style="margin-top:0">${t.priceRules}</div>
+  <p class="muted" style="margin-bottom:10px">${t.priceNote}</p>
+  <div class="grid2">
+   <div><label class="lbl">${t.perKg}</label><input type="number" value="${S.rules.perKg}" onchange="S.rules.perKg=Number(this.value)||0;render()"></div>
+   <div><label class="lbl">${t.expressPct}</label><input type="number" value="${S.rules.expressPct}" onchange="S.rules.expressPct=Number(this.value)||0;render()"></div></div>
+  <label class="lbl" style="margin-top:12px">${t.perItem}</label>
+  ${S.garments.map(g=>`<div class="card row" style="justify-content:space-between;padding:9px 12px;margin-bottom:7px">
+   <span style="font-size:14px;font-weight:600">${esc(g.name[S.lang])}</span>
+   <span class="row" style="gap:4px"><span class="muted">TZS</span>
+    <input type="number" value="${g.price}" style="width:84px;text-align:right;padding:5px 8px"
+     onchange="S.garments.find(x=>x.id==='${g.id}').price=Number(this.value)||0;render()"></span></div>`).join("")}
+  <div class="card" style="border-style:dashed;padding:12px;margin-top:8px">
+   <label class="lbl">${t.addGarment}</label>
+   <div class="row"><input placeholder="${t.addPh}" value="${esc(S.newG.name)}" oninput="S.newG.name=this.value">
+    <input type="number" placeholder="TZS" value="${esc(S.newG.price)}" style="width:90px" oninput="S.newG.price=this.value">
+    <button class="pill" style="background:var(--blue);color:#fff;padding:8px 14px" onclick="addGarment()">${t.add}</button></div></div>`;
+ if(sub==="cust"){
+  const map={};S.orders.forEach(o=>{if(!map[o.customer])map[o.customer]={n:o.customer,p:o.phone,c:0,sp:0,last:o.placed};map[o.customer].c++;map[o.customer].sp+=total(o)});
+  body=`<div class="sec-title" style="margin-top:0">${t.customers}</div>`+
+   Object.values(map).sort((a,b)=>b.sp-a.sp).map(c=>`<div class="card row" style="justify-content:space-between;padding:10px 12px;margin-bottom:8px">
+    <div><b style="font-size:14px">${esc(c.n)}</b><div class="muted">${esc(c.p||t.noPhone)} · ${t.history}: ${esc(c.last)}</div></div>
+    <div style="text-align:right"><b style="font-size:13px">${TZS(c.sp)}</b><div class="muted">${c.c} ${t.ordersW}</div></div></div>`).join("");
+ }
+ return `<div class="strip">${Object.entries(t.shopSub).map(([id,l])=>
+  `<button class="${sub===id?"on":""}" onclick="S.ssub='${id}';render()">${l}</button>`).join("")}</div>${body}`;
+}
+
+function analytics(){
+ const t=T();
+ const todayRev=S.orders.filter(o=>o.placed.startsWith("Leo")||o.placed===t.justNow).reduce((s,o)=>s+total(o),0);
+ const days=[...REV,todayRev],max=Math.max(...days,1),labels=["J-6","J-5","J-4","J-3","J-2","Jana","Leo"];
+ const inWash=S.orders.filter(o=>["washing","drying"].includes(o.stage)).length;
+ const tm=BIZ.branches.reduce((s,b)=>s+b.machines,0),util=Math.round(inWash/tm*100);
+ const cc={};S.orders.forEach(o=>cc[o.customer]=(cc[o.customer]||0)+1);
+ const names=Object.keys(cc),rep=names.length?Math.round(names.filter(n=>cc[n]>1).length/names.length*100):0;
+ const avg=S.orders.length?Math.round(S.orders.reduce((s,o)=>s+total(o),0)/S.orders.length):0;
+ return `<h2 style="font-size:18px;margin-bottom:12px">${t.stats}</h2>
+ <div class="card" style="padding:12px">
+  <b style="font-size:14px">${t.rev7}</b>
+  <div class="chart" style="margin-top:10px">${days.map((v,i)=>
+   `<div class="bcol"><div class="bar ${i===6?"today":""}" style="height:${Math.max(4,v/max*100)}%"></div><small>${labels[i]}</small></div>`).join("")}</div></div>
+ <div class="grid3" style="margin-top:10px">
+  <div class="card stat"><b>${util}%</b><small>${t.machineUtil}</small></div>
+  <div class="card stat"><b>${rep}%</b><small>${t.repeat}</small></div>
+  <div class="card stat"><b style="font-size:13px;margin-top:4px">${TZS(avg).replace("TZS ","")}</b><small>${t.avgOrder}</small></div></div>
+ <p class="muted" style="margin-top:10px">${rep}% ${t.ofCust}.</p>`;
+}
+
+function account(){
+ const t=T();
+ return `<h2 style="font-size:18px;margin-bottom:12px">${t.account}</h2>
+ <div class="card" style="padding:14px;margin-bottom:10px">
+  <b>${BIZ.name}</b><div class="muted" style="font-size:13px;margin-top:3px">${t.owner}: ${BIZ.owner}<br>${t.branches}: ${BIZ.branches.map(b=>b.name).join(", ")}</div></div>
+ <div class="card" style="padding:14px;border-color:var(--blue)">
+  <div style="font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.05em">${t.plan}</div>
+  <div class="row" style="justify-content:space-between;margin-top:4px"><b>${BIZ.plan}</b><span style="font-size:13px">${TZS(BIZ.planPrice)} ${t.perMonth}</span></div>
+  <div class="muted" style="margin-top:4px">${t.nextBilling}</div>
+  <div style="color:var(--green);font-size:12px;font-weight:700;margin-top:4px">✓ ${t.feePaid}</div></div>
+ <button class="btn btn-ghost" style="margin-top:12px" onclick="S.view='landing';render()">${t.logout}</button>`;
+}
+
+function customerApp(){
+ const t=T(),c=S.ctab;
+ let body="";
+ if(c==="book"){
+  const f=S.book,items=Object.entries(f.qty).filter(([,q])=>q>0);
+  const tot=total({items:items.map(([g,qty])=>({g,qty})),kg:0,express:false});
+  const ok=f.address.trim()&&items.length;
+  body=`<h2 style="font-size:18px;margin-bottom:10px">${t.bookTitle}</h2>
+  ${S.bookedMsg?`<div class="banner">${t.booked}</div>`:""}
+  <label class="lbl">${t.address}</label>
+  <input value="${esc(f.address)}" placeholder="${t.addrPh}" oninput="S.book.address=this.value">
+  <div class="grid2" style="margin-top:10px">
+   <div><label class="lbl">${t.pickupDate}</label><select onchange="S.book.date=this.value">
+    ${["Leo","Kesho","Keshokutwa"].map(d=>`<option ${f.date===d?"selected":""}>${d}</option>`).join("")}</select></div>
+   <div><label class="lbl">${t.pickupSlot}</label><select onchange="S.book.slot=this.value">
+    ${["8:00 – 10:00","10:00 – 12:00","14:00 – 16:00","16:00 – 18:00"].map(s=>`<option ${f.slot===s?"selected":""}>${s}</option>`).join("")}</select></div></div>
+  <label class="lbl" style="margin-top:10px">${t.garments}</label>
+  ${garmentPicker(f.qty,"bookQty",4)}
+  <div class="card row" style="justify-content:space-between;padding:10px 12px;margin-top:12px">
+   <span class="muted">${t.total}</span><b>${TZS(tot)}</b></div>
+  <button class="btn btn-blue" style="margin-top:10px" ${ok?"":"disabled"} onclick="saveBook()">${t.bookBtn}</button>`;
+ }
+ if(c==="track"){
+  const mine=S.orders.filter(o=>o.customer==="Baraka J.");
+  body=`<h2 style="font-size:18px;margin-bottom:4px">${t.myOrders}</h2><p class="muted" style="margin-bottom:10px">${t.trackNote}</p>`+
+  mine.map(o=>{
+   const idx=STAGES.indexOf(o.stage);
+   return `<div class="card" style="padding:12px;margin-bottom:10px">
+    <div class="row" style="justify-content:space-between;align-items:flex-start">
+     <div style="min-width:0"><div class="oid mono">${o.id}</div><b style="font-size:13px">${esc(itemsTxt(o))}</b></div>
+     <div style="text-align:right;flex:none"><div class="price" style="font-size:13px">${TZS(total(o))}</div>${pill(o.stage)}</div></div>
+    <div class="stagebar">${STAGES.map((s,i)=>
+     `<div class="dot ${i<=idx?"on":""}"></div>${i<STAGES.length-1?`<div class="link ${i<idx?"on":""}"></div>`:""}`).join("")}</div>
+    <div class="row" style="justify-content:space-between;margin-top:4px">
+     <span style="font-size:12px;font-weight:700;color:${o.paid?"var(--green)":"var(--rose)"}">${o.paid?"✓ "+t.paid:t.unpaid}</span>
+     ${o.paid?"":`<button class="pill" style="background:var(--blue);color:#fff;padding:7px 12px" onclick="pay('${o.id}')">${t.payMpesa} · ${TZS(total(o))}</button>`}
+    </div></div>`}).join("");
+ }
+ if(c==="inbox"){
+  body=`<h2 style="font-size:18px;margin-bottom:10px">${t.inbox}</h2>`+
+   (S.notifs.length?S.notifs.map(n=>`<div class="card notif"><span>${n.ch==="wa"?"🟢":"✉️"}</span>
+    <div><div style="font-size:13px">${esc(n.text)}</div><div class="muted" style="font-size:11px">${n.time} · ${n.ch==="wa"?"WhatsApp":"SMS"}</div></div></div>`).join("")
+   :`<p class="muted">${t.noNotifs}</p>`);
+ }
+ return `<div class="strip">${Object.entries(t.ctabs).map(([id,l])=>
+  `<button class="${c===id?"on":""}" onclick="S.ctab='${id}';S.bookedMsg=false;render()">${l}</button>`).join("")}</div>${body}`;
+}
+
+function driverApp(){
+ const t=T();
+ const pick=S.orders.filter(o=>o.stage==="booked").sort((a,b)=>a.dist-b.dist);
+ const del=S.orders.filter(o=>o.delivery&&["ready","out"].includes(o.stage)).sort((a,b)=>a.dist-b.dist);
+ const task=(o,type,i)=>`<div class="card task">
+  <div class="stopnum">${i+1}</div>
+  <div style="flex:1;min-width:0"><b style="font-size:13px">${esc(o.customer)}</b> <span class="oid mono">${o.id}</span>
+   <div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(o.address||"—")} · ${o.dist} km</div>${pill(o.stage)}</div>
+  ${type==="p"
+   ?`<button class="pill" style="background:var(--blue);color:#fff;padding:9px 10px" onclick="setStage('${o.id}','received')">${t.pickedUp}</button>`
+   :`<button class="pill" style="background:var(--blue);color:#fff;padding:9px 10px" onclick="setStage('${o.id}','${o.stage==="ready"?"out":"done"}')">${o.stage==="ready"?"🚚":t.delivered}</button>`}
+ </div>`;
+ return `<h2 style="font-size:18px;margin-bottom:4px">${t.driver}</h2>
+ <p class="muted" style="margin-bottom:10px">${t.routeNote}</p>
+ <div class="sec-title">📥 ${t.pickups}</div>
+ ${pick.length?pick.map((o,i)=>task(o,"p",i)).join(""):`<p class="muted">${t.noTasks}</p>`}
+ <div class="sec-title">📤 ${t.deliveries}</div>
+ ${del.length?del.map((o,i)=>task(o,"d",i)).join(""):`<p class="muted">${t.noTasks}</p>`}`;
+}
+
+// ─── Root render ─────────────────────────────────────────────────
+const ICONS={dash:"◧",orders:"⬡",shop:"⌂",stats:"▤",account:"☰"};
+function render(){
+ const app=document.getElementById("app"),t=T();
+ if(S.view==="landing"){app.innerHTML=landing();window.scrollTo(0,0);return}
+ let body,nav="";
+ if(S.role==="cust")body=`<main class="nopad">${customerApp()}</main>`;
+ else if(S.role==="driver")body=`<main class="nopad">${driverApp()}</main>`;
+ else{
+  const screen=S.creating?pos():S.tab==="dash"?bizDash():S.tab==="orders"?bizOrders():S.tab==="shop"?shop():S.tab==="stats"?analytics():account();
+  body=`<main>${screen}</main>`;
+  nav=`<nav class="bottom">${["dash","orders","shop","stats","account"].map(id=>
+   `<button class="${S.tab===id&&!S.creating?"on":""}" onclick="S.creating=false;S.tab='${id}';render()">
+    <div class="ic">${ICONS[id]}</div><small>${t.tabs[id]}</small></button>`).join("")}</nav>`;
+ }
+ app.innerHTML=header()+body+nav;
+}
+render();
+</script>
+</body>
+</html>
