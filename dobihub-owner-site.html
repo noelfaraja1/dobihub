@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DobiHub kwa Wamiliki — Ingia</title>
+<style>
+  :root{--navy:#0B2447;--blue:#1D6FE0;--blue-d:#144FA6;--sky:#EAF2FD;--cyan:#7EB8FF;--mint:#2BC5A3;--mint-d:#149B7F;--lilac:#C97BD9;--coral:#E8604C;--gold:#F2B33D;--ink:#0B1A2E;--slate:#5B6B80;--line:#DCE6F3;--rose:#D64560;--green:#1B9E6B;--cream:#FFF8E1}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Poppins',-apple-system,'Segoe UI',Roboto,'Noto Sans',sans-serif;color:var(--ink);background:#fff;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input,select{font-family:inherit;font-size:15px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;width:100%;color:var(--ink);background:#fff}
+  input:focus,select:focus{outline:2px solid var(--blue);outline-offset:-1px}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:12px;font-weight:600;font-size:15px;white-space:nowrap}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 6px 18px rgba(29,111,224,.25)}
+  .btn-primary:hover{background:var(--blue-d)}
+  .btn-outline{border:2px solid var(--blue);color:var(--blue);background:#fff}
+  .btn-ghost{border:1px solid var(--line);color:var(--slate);background:#fff}
+  .btn-green{background:var(--green);color:#fff}
+  .btn-red{background:#FCE4EA;color:var(--rose)}
+  .btn-sm{padding:8px 14px;font-size:13px;border-radius:9px}
+  .btn[disabled]{background:#B9C6D8;color:#fff;box-shadow:none;cursor:not-allowed}
+  .lbl{display:block;font-size:12px;font-weight:700;color:var(--slate);margin:12px 0 5px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px}
+  .muted{color:var(--slate);font-size:13px}
+  .mono{font-family:ui-monospace,'SF Mono',Menlo,monospace}
+  .lang{display:flex;border:1px solid var(--line);border-radius:99px;overflow:hidden}
+  .lang button{font-size:11px;font-weight:800;padding:5px 10px;color:var(--slate)}
+  .lang button.on{background:var(--blue);color:#fff}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:20px;letter-spacing:-.02em}
+  .logo span{color:var(--blue)}
+
+  /* ── SITE (owner) ── */
+  header.site{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .nav-links{display:flex;gap:26px;font-weight:500;font-size:15px}
+  .nav-links a{padding:6px 0;border-bottom:2px solid transparent}
+  .nav-links a.on{border-color:var(--ink)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .hero{padding:64px 0 60px;overflow:hidden}
+  .hero .grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+  .hero h1{font-size:clamp(36px,5.2vw,58px);line-height:1.05;font-weight:800;letter-spacing:-.03em}
+  .hero p{margin-top:20px;font-size:16px;color:#33455E;max-width:48ch}
+  .hero .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+  .hero .trust{margin-top:22px;display:flex;gap:18px;flex-wrap:wrap;color:var(--slate);font-size:13px}
+  .hero .trust b{color:var(--ink)}
+  .art{position:relative;height:520px}
+  .art .blob{position:absolute;right:0;top:40px;width:400px;height:400px;border-radius:50%;background:linear-gradient(140deg,var(--lilac),#9E63D8)}
+  .art .b1,.art .b2,.art .b3{position:absolute;border-radius:50%;background:var(--lilac)}
+  .art .b1{width:22px;height:22px;left:60px;top:26px;opacity:.85}.art .b2{width:44px;height:44px;left:20px;top:56px;opacity:.75}.art .b3{width:44px;height:44px;right:60px;bottom:8px;opacity:.75}
+  .card-f{position:absolute;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(11,36,71,.18);padding:12px 16px;text-align:center;z-index:3}
+  .card-day{left:10px;top:70px}
+  .card-day b{display:block;font-size:26px;line-height:1}
+  .card-day small{display:block;color:var(--slate);font-size:11px;font-weight:600;margin-top:2px}
+  .card-day em{display:block;font-style:normal;font-size:12px;margin-top:6px}
+  .card-req{right:-6px;bottom:70px;text-align:left;border:2px solid var(--mint);padding:10px 14px}
+  .card-req b{display:block;font-size:13px}
+  .card-req small{color:var(--slate);font-size:11px}
+  .card-req .amt{color:var(--mint-d);font-weight:800;font-size:14px}
+  .lbox{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:360px;background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(11,36,71,.22);padding:26px 26px 22px;z-index:2}
+  .lbox h2{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .lbox .sub{color:var(--slate);margin-top:2px;font-size:13px}
+  .roles{display:flex;gap:8px;margin-top:16px}
+  .roles button{flex:1;border:2px solid var(--line);border-radius:12px;padding:9px 6px;font-weight:700;font-size:13px;background:#fff}
+  .roles button.on{border-color:var(--blue);background:var(--sky);color:var(--blue-d)}
+  .roles small{display:block;font-weight:400;font-size:10.5px;color:var(--slate)}
+  .pw{position:relative}.pw button{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--blue)}
+  .row-b{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12.5px}
+  .row-b a{color:var(--blue);font-weight:600}
+  .err{background:#FCE4EA;color:var(--rose);border-radius:10px;padding:8px 12px;font-size:12.5px;margin-top:10px;font-weight:600;display:none}
+  .demo{margin-top:12px;background:var(--sky);border-radius:10px;padding:9px 12px;font-size:12px}
+  .demo b{display:block;margin-bottom:2px}
+  .signup{margin-top:12px;text-align:center;font-size:12.5px;color:var(--slate)}
+  .signup a{color:var(--blue);font-weight:700}
+  .band{background:var(--mint);padding:64px 0}
+  .band h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;letter-spacing:-.02em}
+  .band .sub{color:#0B3B31;margin-top:8px;max-width:60ch}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+  .plan{position:relative;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;display:flex;flex-direction:column}
+  .plan.pop{background:var(--cream);border-color:#F2D77A}
+  .plan .tag{position:absolute;top:-12px;left:22px;background:var(--lilac);color:#fff}
+  .plan h3{font-size:22px;font-weight:800}.plan .for{font-size:12.5px;color:var(--slate)}
+  .plan .price{margin-top:14px;font-size:26px;font-weight:800}.plan .price small{font-size:13px;color:var(--slate);font-weight:500}
+  .plan ul{list-style:none;margin:14px 0 18px;font-size:13.5px;color:#33455E;display:grid;gap:6px}
+  .plan li::before{content:"✓ ";color:var(--mint-d);font-weight:800}
+  .plan .btn{margin-top:auto}
+  .fee{margin-top:22px;background:rgba(255,255,255,.35);border-radius:14px;padding:14px 18px;color:#0B3B31;font-size:14px;font-weight:600}
+  .feats{padding:70px 0}
+  .feats h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;letter-spacing:-.02em}
+  .why{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+  .why div{border:1px solid var(--line);border-radius:16px;padding:22px}
+  .why .ic{font-size:26px}.why h3{margin-top:10px;font-size:16px}.why p{color:var(--slate);font-size:13.5px;margin-top:6px}
+  footer.site{padding:26px 0;font-size:13px;color:var(--slate);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line)}
+  footer.site .fl{display:flex;gap:16px}
+
+/* ── DASHBOARD ── */
+  .dash{display:none;min-height:100vh}
+  .dash.on{display:grid;grid-template-columns:230px 1fr}
+  aside{background:var(--navy);color:#fff;padding:22px 16px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+  aside .shop{margin-top:22px;padding:12px;background:rgba(255,255,255,.08);border-radius:12px}
+  aside .shop b{display:block;font-size:14px}
+  aside .shop small{color:#A9C4E8;font-size:11px}
+  aside nav{margin-top:18px;display:grid;gap:4px}
+  aside nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:10px;font-size:14px;font-weight:600;color:#C7D6EA}
+  aside nav button.on,aside nav button:hover{background:rgba(255,255,255,.12);color:#fff}
+  aside nav .n{margin-left:auto;background:var(--coral);color:#fff;font-size:11px;font-weight:800;padding:1px 8px;border-radius:99px}
+  aside .out{margin-top:auto;color:#A9C4E8;font-size:13px;padding:10px 12px;text-align:left}
+  .top{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:5}
+  .top h2{font-size:18px;font-weight:800}
+  .top .status{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+  .top .status i{width:9px;height:9px;border-radius:99px;background:var(--green);box-shadow:0 0 0 4px rgba(27,158,107,.18)}
+  .switch{width:38px;height:22px;border-radius:99px;background:#CFD9E8;position:relative;flex:none}
+  .switch.on{background:var(--green)}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:99px;background:#fff;transition:left .15s}
+  .switch.on::after{left:19px}
+  .content{padding:22px 24px 40px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .stat{padding:14px 16px}
+  .stat small{color:var(--slate);font-size:12px;font-weight:600}
+  .stat b{display:block;font-size:24px;margin-top:2px}
+  .stat.hot{border-color:#F3C4BB;background:#FFF7F5}
+  .stat.hot b{color:var(--coral)}
+  .cols{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px;align-items:start}
+  h3.sec{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+  h3.sec .n{background:var(--coral);color:#fff;font-size:11px;padding:1px 8px;border-radius:99px}
+  .req{padding:14px 16px;margin-bottom:10px;border-left:4px solid var(--coral)}
+  .req.new{animation:pop .4s ease}
+  @keyframes pop{from{transform:translateY(-6px);opacity:0}to{transform:none;opacity:1}}
+  .req .h{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .req .who b{font-size:15px}
+  .req .who small{display:block;color:var(--slate);font-size:12px}
+  .req .amt{font-weight:800;font-size:16px;white-space:nowrap}
+  .req .det{margin-top:8px;font-size:13px;color:#33455E;display:grid;gap:3px}
+  .req .act{display:flex;gap:8px;margin-top:12px}
+  .timer{font-size:11px;font-weight:700;color:var(--coral)}
+  .empty{padding:26px;text-align:center;color:var(--slate);font-size:13px}
+  .order{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid #EEF3FA}
+  .order:last-child{border-bottom:none}
+  .order .id{font-size:11px;letter-spacing:.12em;color:#8AA0BC}
+  .order b{font-size:14px}
+  .order small{display:block;color:var(--slate);font-size:12px}
+  .order .r{margin-left:auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  .side .card{padding:14px 16px;margin-bottom:12px}
+  .side h4{font-size:14px;font-weight:800;margin-bottom:8px}
+  .kv{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #EEF3FA}
+  .kv:last-child{border-bottom:none}
+  .toast{position:fixed;right:22px;bottom:22px;background:var(--navy);color:#fff;padding:12px 16px;border-radius:12px;font-size:13px;box-shadow:0 12px 30px rgba(11,36,71,.3);display:flex;gap:10px;align-items:center;transform:translateY(120px);transition:transform .25s;z-index:20;max-width:340px}
+  .toast.on{transform:none}
+  .toast .dotc{width:10px;height:10px;border-radius:99px;background:var(--coral);flex:none}
+  .stagesel{font-size:12px;padding:6px 8px;width:auto;border-radius:8px}
+  .filt{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .fchip{font-size:12px;font-weight:600;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--slate)}
+  .fchip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+    @media(max-width:900px){.hero .grid{grid-template-columns:1fr}.nav-links{display:none}.art{height:auto;padding:30px 0}.art .blob{display:none}.card-day,.card-req{display:none}.lbox{position:static;transform:none;width:100%;box-shadow:0 10px 30px rgba(11,36,71,.12)}.plans{grid-template-columns:1fr}.why{grid-template-columns:1fr 1fr}.dash.on{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;gap:6px;padding:12px}aside .shop{margin:0;width:100%}aside nav{display:flex;flex-wrap:wrap;margin:0;width:100%}aside .out{margin:0}.stats{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ OWNER SITE + LOGIN ═══════════ -->
+<div id="login">
+<header class="site"><div class="wrap nav">
+  <a href="#" class="logo"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M15 2 C15 2 5 13 5 19 a10 10 0 0 0 20 0 C25 13 15 2 15 2z" fill="#1D6FE0"/><circle cx="12" cy="20" r="3" fill="#7EB8FF"/></svg>Dobi<span>Hub</span> <span style="font-size:11px;font-weight:700;color:var(--slate);letter-spacing:.15em;margin-left:4px" data-t="forOwners">KWA WAMILIKI</span></a>
+  <nav class="nav-links"><a href="#" class="on" data-t="nHome">Nyumbani</a><a href="#bei" data-t="nPricing">Bei</a><a href="#vipengele" data-t="nFeatures">Vipengele</a><a href="#wasiliana" data-t="nContact">Wasiliana</a></nav>
+  <div class="nav-right">
+    <div class="lang"><button class="on" id="l-sw" onclick="setLang('sw')">SW</button><button id="l-en" onclick="setLang('en')">EN</button></div>
+    <a href="dobihub-driver.html" class="btn btn-ghost btn-sm" data-t="driverSite">🛵 DobiHub Driver</a>
+    <button class="btn btn-primary btn-sm" onclick="document.getElementById('u').focus()" data-t="enter">Ingia</button>
+  </div>
+</div></header>
+
+<section class="hero"><div class="wrap grid">
+  <div>
+    <h1 data-t="h1">Pokea oda,<br>bila kusubiri<br>wateja.</h1>
+    <p data-t="p1">Wateja wanakupata kwenye ramani ya DobiHub, wanaomba pickup & delivery, na ombi linakufikia dukani kwako papo hapo. Kubali, panga dereva, fua, wasilisha — na ulipwe kwa M-Pesa.</p>
+    <div class="cta"><button class="btn btn-primary" onclick="document.getElementById('u').focus()" data-t="enter">Ingia</button><a href="#bei" class="btn btn-outline" data-t="seePrices">Angalia bei</a></div>
+    <div class="trust"><span>🏪 <b>120+</b> <span data-t="shopsOn">dobi kwenye DobiHub</span></span><span>🔔 <b>4 dk</b> <span data-t="avgResp">wastani wa kujibu ombi</span></span><span>💳 <span data-t="noComm">Hakuna makato</span></span></div>
+  </div>
+  <div class="art">
+    <div class="b1"></div><div class="b2"></div><div class="b3"></div>
+    <div class="blob"></div>
+    <div class="card-f card-day"><b>Jum</b><small>18 AGO</small><em data-t="today">leo</em></div>
+    <div class="card-f card-req"><b>🔔 <span data-t="newReq">Ombi jipya</span> · Baraka J.</b><small>1× Suti, 4× Shati · Kariakoo · 0.9 km</small><div class="amt">TZS 14,000</div></div>
+    <div class="lbox">
+      <h2 data-t="loginH">Ingia kwenye duka lako</h2>
+      <p class="sub" data-t="loginP">Kwa wamiliki wa dobi walio kwenye mtandao wa DobiHub.</p>
+      <div class="roles">
+        <button class="on" id="r-owner" style="cursor:default">🏪 <span data-t="owner">Mmiliki wa dobi</span><small data-t="ownerD">Pokea & endesha oda</small></button>
+      </div>
+      <label class="lbl" data-t="user">Simu au barua pepe</label>
+      <input id="u" placeholder="07xx xxx xxx" autocomplete="username">
+      <label class="lbl" data-t="pw">Nenosiri</label>
+      <div class="pw"><input id="p" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="togglePw()" id="pwt" data-t="show">Onyesha</button></div>
+      <div class="row-b"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" style="width:auto" checked> <span data-t="remember">Nikumbuke</span></label><a href="#" data-t="forgot">Umesahau nenosiri?</a></div>
+      <div class="err" id="err" data-t="errMsg">Namba au nenosiri si sahihi. Jaribu tena.</div>
+      <button class="btn btn-primary" style="width:100%;margin-top:14px" onclick="doLogin()" data-t="enter">Ingia</button>
+      <div class="demo"><b data-t="demoH">Akaunti ya majaribio</b><span data-t="demoP">Simu <span class="mono">0753 010 010</span> · Nenosiri <span class="mono">dobi2026</span></span> · <a href="#" style="color:var(--blue);font-weight:700" onclick="fillDemo();return false" data-t="fill">Jaza</a></div>
+      <p class="signup"><span data-t="noAcc">Huna akaunti ya biashara?</span> <a href="#bei" data-t="join">Jisajili sasa →</a></p>
+    </div>
+  </div>
+</div></section>
+
+<section class="band" id="bei"><div class="wrap">
+  <h2 data-t="plansH">Chagua kifurushi cha biashara yako</h2>
+  <p class="sub" data-t="plansP">Bei tambarare kwa mwezi. Hakuna makato kwenye oda — kila shilingi ya mteja ni yako.</p>
+  <div class="plans" id="plans"></div>
+  <div class="fee" data-t="fee">Ada ya uunganishaji: TZS 50,000 (mara moja) — inajumuisha kuweka duka lako kwenye ramani, mafunzo, na msaada wa kuanza.</div>
+</div></section>
+
+<section class="feats" id="vipengele"><div class="wrap">
+  <h2 data-t="featH">Kila kitu unachohitaji kuendesha dobi</h2>
+  <div class="why" id="why"></div>
+</div></section>
+
+<footer class="site wrap" id="wasiliana">
+  <span>© 2026 DobiHub · Dar es Salaam · +255 753 010 010 · biashara@dobihub.co.tz</span>
+  <div class="fl"><a href="#bei" data-t="nPricing">Bei</a><a href="#vipengele" data-t="nFeatures">Vipengele</a><a href="dobihub-driver.html" data-t="driverSite">DobiHub Driver</a></div>
+</footer>
+</div>
+
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<section class="dash" id="dash">
+  <aside>
+    <div class="logo" style="font-size:19px"><svg width="26" height="26" viewBox="0 0 30 30"><path d="M15 2 C15 2 5 13 5 19 a10 10 0 0 0 20 0 C25 13 15 2 15 2z" fill="#7EB8FF"/><circle cx="12" cy="20" r="3" fill="#fff"/></svg>Dobi<span>Hub</span></div>
+    <div class="shop"><b>Kariakoo Fresh Laundry</b><small>Halima Juma · Kariakoo, Dar es Salaam</small><small style="display:block;margin-top:4px;color:#7EB8FF">★ 4.8 · Biashara plan</small></div>
+    <nav id="snav"></nav>
+    <button class="out" onclick="logout()" data-t="logout">← Toka</button>
+  </aside>
+  <div>
+    <div class="top">
+      <h2 id="pagetitle"></h2>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="status"><i id="stdot"></i><span data-t="online">Wazi — unapokea oda</span><button class="switch on" id="sw" onclick="toggleOpen()"></button></div>
+        <div class="lang"><button class="on" id="d-sw" onclick="setLang('sw')">SW</button><button id="d-en" onclick="setLang('en')">EN</button></div>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</section>
+
+<div class="toast" id="toast"><span class="dotc"></span><span id="toasttxt"></span></div>
+<audio id="ding" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU" preload="auto"></audio>
+
+<script>
+const TZS=n=>"TZS "+Number(n).toLocaleString("en-US");
+let lang="sw",role="owner",open=true,tab="requests",filt="all";
+const T={
+ sw:{forOwners:"KWA WAMILIKI",nHome:"Nyumbani",nPricing:"Bei",nFeatures:"Vipengele",nContact:"Wasiliana",custSite:"Tovuti ya wateja",driverSite:"DobiHub Driver (madereva)",seePrices:"Angalia bei",
+  shopsOn:"dobi kwenye DobiHub",avgResp2:"wastani wa kujibu ombi",noComm:"Hakuna makato",today:"leo",newReq:"Ombi jipya",
+  plansH:"Chagua kifurushi cha biashara yako",plansP:"Bei tambarare kwa mwezi. Hakuna makato kwenye oda — kila shilingi ya mteja ni yako.",popular:"Maarufu zaidi",perMonth:"/mwezi",free:"Bure",choose:"Chagua",
+  plans:[["Mwanzo","Jaribio la bure siku 30",0,["Tawi 1","Hadi oda 20 kwa mwezi","Kupokea maombi ya wateja","SMS kwa wateja (lipa unavyotumia)"]],["Biashara","Kwa duka linalokua",125000,["Hadi matawi 3","Oda bila kikomo","POS + lebo za QR","Kanzidata ya wateja","Ripoti za mapato"]],["Mtandao","Kwa mtandao wa matawi mengi",160000,["Matawi bila kikomo","Akaunti za wafanyakazi","App ya dereva","Takwimu za kina","Msaada wa kipaumbele"]]],
+  fee:"Ada ya uunganishaji: TZS 50,000 (mara moja) — inajumuisha kuweka duka lako kwenye ramani, mafunzo, na msaada wa kuanza.",
+  featH:"Kila kitu unachohitaji kuendesha dobi",
+  why:[["🔔","Maombi papo hapo","Kila ombi jipya linatokea kwenye dashibodi na simu yako kwa SMS."],["🛵","Madereva wa DobiHub","Kubali ombi — dereva anapangwa moja kwa moja kwa njia fupi."],["🧾","POS + lebo za QR","Oda za dukani, lebo kwa kila mfuko, malipo ya M-Pesa/Tigo Pesa/taslimu."],["📊","Takwimu","Mapato, matumizi ya mashine, wateja wanaorudi — kwa kila tawi."]],
+  h1:"Pokea oda,<br>bila kusubiri<br>wateja.",p1:"Wateja wanakupata kwenye ramani ya DobiHub, wanaomba pickup & delivery, na ombi linakufikia hapa papo hapo. Kubali, panga dereva, fua, wasilisha — na ulipwe.",
+  feat:[["🔔","Maombi papo hapo","Kila ombi jipya linatokea hapa na kwenye simu yako kwa SMS."],["🛵","Madereva wa DobiHub","Kubali ombi — dereva anapangwa moja kwa moja."],["💳","Malipo ya M-Pesa","Malipo yanaingia moja kwa moja, bila makato."],["📊","Takwimu za duka","Mapato, wateja wanaorudi, matumizi ya mashine."]],
+  foot:"Bei tambarare · ada ya uunganishaji TZS 50,000 (mara moja) · hakuna makato kwenye oda zako",
+  loginH:"Ingia kwenye duka lako",loginP:"Wamiliki wa dobi pekee. Madereva wanatumia DobiHub Driver.",owner:"Mmiliki wa dobi",ownerD:"Pokea & endesha oda",driver:"Dereva",driverD:"Kazi za kuchukua & kuwasilisha",
+  user:"Simu au barua pepe",pw:"Nenosiri",show:"Onyesha",hide:"Ficha",remember:"Nikumbuke",forgot:"Umesahau nenosiri?",errMsg:"Namba au nenosiri si sahihi. Jaribu tena.",enter:"Ingia",
+  demoH:"Akaunti ya majaribio",demoP:'Simu <span class="mono">0753 010 010</span> · Nenosiri <span class="mono">dobi2026</span>',fill:"Jaza",noAcc:"Huna akaunti ya biashara?",join:"Jisajili sasa →",
+  driverNote:"Sehemu ya dereva iko kwenye app ya DobiHub Driver. Onyesho hili ni la mmiliki wa dobi.",
+  logout:"← Toka",online:"Wazi — unapokea oda",offline:"Imefungwa — hupokei oda",
+  nav:{requests:"Maombi mapya",orders:"Oda zote",today:"Ratiba ya leo",stats:"Takwimu"},
+  sNew:"Maombi mapya",sActive:"Oda hai",sReady:"Tayari kuwasilishwa",sRev:"Mapato leo",
+  incoming:"Maombi yanayoingia",noReq:"Hakuna ombi jipya kwa sasa. Maombi mapya yatatokea hapa mara moja.",
+  accept:"✓ Kubali",decline:"Kataa",ago:"dk zilizopita",respond:"Jibu ndani ya",
+  items:"Nguo",addr:"Anwani",slot:"Muda wa kuchukuliwa",svc:"Huduma",note:"Maelezo",pay:"Malipo",payLater:"M-Pesa / taslimu wakati wa delivery",dist:"km kutoka dukani",
+  svcPD:"Pickup & Delivery",svcPO:"Pickup tu",svcDrop:"Mteja ataleta, tuwasilishe",
+  recent:"Oda za hivi karibuni",allOrders:"Oda zote",stagesAll:"Hatua zote",
+  st:{requested:"Ombi limetumwa",booked:"Imekubaliwa · dereva anakuja",received:"Imepokelewa dukani",washing:"Inafuliwa",drying:"Inakaushwa",folding:"Inakunjwa / pasi",ready:"Tayari",out:"Inasafirishwa",done:"Imekamilika",declined:"Imekataliwa"},
+  paid:"Imelipwa",unpaid:"Bado",
+  todayH:"Ratiba ya leo",pickups:"Kuchukua",deliveries:"Kuwasilisha",inShop:"Zinafanyiwa kazi dukani",
+  tips:"Vidokezo",tip1:"Kubali maombi ndani ya dakika 10 ili kuweka alama nzuri.",tip2:"Weka duka 'Imefungwa' ukiwa umejaa — hutapokea maombi mapya.",tip3:"Sasisha hatua za oda; mteja anapata SMS kila hatua.",
+  perf:"Utendaji wa duka",accRate:"Kiwango cha kukubali",avgResp:"Muda wa kujibu",rating:"Alama ya wateja",repeat:"Wateja wanaorudi",
+  toastNew:"Ombi jipya kutoka",toastAcc:"Umekubali. Dereva amepangwa.",toastDec:"Ombi limekataliwa.",toastOff:"Duka limefungwa. Hupokei maombi mapya.",toastOn:"Duka liko wazi. Unapokea maombi.",
+  simulate:"+ Iga ombi jipya (demo)"},
+ en:{forOwners:"FOR OWNERS",nHome:"Home",nPricing:"Pricing",nFeatures:"Features",nContact:"Contact",custSite:"Customer site",driverSite:"DobiHub Driver (drivers)",seePrices:"See pricing",
+  shopsOn:"shops on DobiHub",avgResp2:"avg. response to requests",noComm:"No commission",today:"today",newReq:"New request",
+  plansH:"Choose a plan for your business",plansP:"Flat monthly pricing. No commission on orders — every customer shilling is yours.",popular:"Most popular",perMonth:"/month",free:"Free",choose:"Choose",
+  plans:[["Beginning","30-day free trial",0,["Branch 1","Up to 20 orders per month","Receiving customer requests","SMS for customers (pay as you go)"]],["Business","For a growing store",125000,["Up to 3 branches","Unlimited orders","POS + QR tags","Customer database","Revenue reports"]],["Network","For a multi-branch network",160000,["Unlimited branches","Employee accounts","Driver app","Detailed statistics","Priority support"]]],
+  fee:"Integration fee: TZS 50,000 (one-time) — includes listing your shop on the map, training, and onboarding support.",
+  featH:"Everything you need to run a laundry",
+  why:[["🔔","Instant requests","Every new request appears on your dashboard and your phone by SMS."],["🛵","DobiHub drivers","Accept a request — a driver is auto-assigned on the shortest route."],["🧾","POS + QR tags","Walk-in orders, a tag per bag, M-Pesa/Tigo Pesa/cash payments."],["📊","Analytics","Revenue, machine utilization, repeat customers — per branch."]],
+  h1:"Receive orders,<br>without waiting<br>for customers.",p1:"Customers find you on the DobiHub map, request pickup & delivery, and the request lands here instantly. Accept, assign a driver, wash, deliver — and get paid.",
+  feat:[["🔔","Instant requests","Every new request appears here and on your phone by SMS."],["🛵","DobiHub drivers","Accept a request — a driver is assigned automatically."],["💳","M-Pesa payments","Payments arrive directly, no commission."],["📊","Shop analytics","Revenue, repeat customers, machine utilization."]],
+  foot:"Flat pricing · TZS 50,000 one-time integration fee · no commission on your orders",
+  loginH:"Log in to your shop",loginP:"Owners only. Drivers use the separate DobiHub Driver platform.",owner:"Laundry owner",ownerD:"Receive & run orders",driver:"Driver",driverD:"Pickup & delivery tasks",
+  user:"Phone or email",pw:"Password",show:"Show",hide:"Hide",remember:"Remember me",forgot:"Forgot password?",errMsg:"Phone or password incorrect. Try again.",enter:"Log in",
+  demoH:"Demo account",demoP:'Phone <span class="mono">0753 010 010</span> · Password <span class="mono">dobi2026</span>',fill:"Fill",noAcc:"No business account yet?",join:"Sign up now →",
+  driverNote:"The driver area lives in the DobiHub Driver app. This demo shows the laundry-owner dashboard.",
+  logout:"← Log out",online:"Open — receiving orders",offline:"Closed — not receiving orders",
+  nav:{requests:"New requests",orders:"All orders",today:"Today's schedule",stats:"Analytics"},
+  sNew:"New requests",sActive:"Active orders",sReady:"Ready to deliver",sRev:"Revenue today",
+  incoming:"Incoming requests",noReq:"No new requests right now. New ones will appear here instantly.",
+  accept:"✓ Accept",decline:"Decline",ago:"min ago",respond:"Respond within",
+  items:"Garments",addr:"Address",slot:"Pickup slot",svc:"Service",note:"Notes",pay:"Payment",payLater:"M-Pesa / cash on delivery",dist:"km from shop",
+  svcPD:"Pickup & Delivery",svcPO:"Pickup only",svcDrop:"Customer drops off, we deliver",
+  recent:"Recent orders",allOrders:"All orders",stagesAll:"All stages",
+  st:{requested:"Request sent",booked:"Accepted · driver coming",received:"Received at shop",washing:"Washing",drying:"Drying",folding:"Folding / iron",ready:"Ready",out:"Out for delivery",done:"Completed",declined:"Declined"},
+  paid:"Paid",unpaid:"Unpaid",
+  todayH:"Today's schedule",pickups:"Pickups",deliveries:"Deliveries",inShop:"In progress at shop",
+  tips:"Tips",tip1:"Accept requests within 10 minutes to keep a strong rating.",tip2:"Set the shop 'Closed' when you're full — you won't get new requests.",tip3:"Update order stages; the customer gets an SMS each step.",
+  perf:"Shop performance",accRate:"Acceptance rate",avgResp:"Response time",rating:"Customer rating",repeat:"Repeat customers",
+  toastNew:"New request from",toastAcc:"Accepted. Driver assigned.",toastDec:"Request declined.",toastOff:"Shop closed. Not receiving new requests.",toastOn:"Shop open. Receiving requests.",
+  simulate:"+ Simulate new request (demo)"}
+};
+const t=()=>T[lang];
+const G={shirt:{sw:"Shati",en:"Shirt",p:1500},trouser:{sw:"Suruali",en:"Trouser",p:2000},dress:{sw:"Gauni",en:"Dress",p:3000},suit:{sw:"Suti",en:"Suit",p:8000},bedsheet:{sw:"Shuka",en:"Bedsheet",p:3500},kitenge:{sw:"Kitenge",en:"Kitenge",p:4000}};
+const STAGES=["requested","booked","received","washing","drying","folding","ready","out","done"];
+const SCOL={requested:["#FFF0E1","#B15A16"],booked:["#FFF7DB","#8A6A12"],received:["#E7EDF5","#44536B"],washing:["#DFF0FF","#12609E"],drying:["#FFF4D6","#8A6A12"],folding:["#EDE7FB","#5B3FA8"],ready:["#E1F6EA","#157347"],out:["#DDE9FF","#1D4FB8"],done:["#EEF2F7","#8393A8"],declined:["#FCE4EA","#B92B4B"]};
+let orders=[
+ {id:"DH-2210",cust:"Baraka J.",phone:"0684 220 913",items:{suit:1,shirt:4},svc:"pd",addr:"Kariakoo, Msimbazi St 4",dist:0.9,slot:"Leo 14:00 – 16:00",note:"Piga kengele mara mbili",express:false,stage:"requested",paid:false,min:2,placed:"Leo 9:05"},
+ {id:"DH-2211",cust:"Grace W.",phone:"0712 655 480",items:{dress:3,kitenge:1},svc:"pd",addr:"Upanga, Ali Hassan Mwinyi Rd",dist:2.3,slot:"Leo 16:00 – 18:00",note:"",express:true,stage:"requested",paid:false,min:6,placed:"Leo 9:01"},
+ {id:"DH-2201",cust:"Amani S.",phone:"0754 118 220",items:{shirt:3,trouser:2},svc:"pd",addr:"Kariakoo, Swahili St 12",dist:1.2,slot:"Leo 8:00 – 10:00",note:"",express:false,stage:"washing",paid:true,min:60,placed:"Leo 8:15"},
+ {id:"DH-2202",cust:"Neema M.",phone:"0713 400 771",items:{dress:2},svc:"drop",addr:"Kariakoo, Congo St",dist:0.4,slot:"—",note:"",express:true,stage:"folding",paid:false,min:80,placed:"Leo 8:40"},
+ {id:"DH-2204",cust:"Zawadi K.",phone:"0765 909 445",items:{bedsheet:3},svc:"pd",addr:"Msasani, Toure Dr",dist:5.1,slot:"Jana 16:00 – 18:00",note:"",express:false,stage:"ready",paid:true,min:900,placed:"Jana 16:30"},
+ {id:"DH-2205",cust:"Juma R.",phone:"0716 313 556",items:{shirt:6,trouser:3},svc:"po",addr:"—",dist:0,slot:"—",note:"",express:false,stage:"done",paid:true,min:1000,placed:"Jana 15:00"}];
+const NEXT=[
+ {cust:"Fatma A.",phone:"0768 220 011",items:{shirt:5,trouser:2},svc:"pd",addr:"Ilala, Uhuru St 21",dist:1.7,slot:"Kesho 8:00 – 10:00",note:"",express:false},
+ {cust:"Peter M.",phone:"0782 990 340",items:{suit:2},svc:"po",addr:"Kariakoo, Nyamwezi St",dist:0.6,slot:"Leo 16:00 – 18:00",note:"Nguo za harusi — tafadhali kwa uangalifu",express:true},
+ {cust:"Rehema S.",phone:"0745 331 900",items:{bedsheet:4,kitenge:2},svc:"drop",addr:"Upanga, Ocean Rd",dist:2.8,slot:"—",note:"",express:false}];
+let nextId=2212,nextIdx=0;
+const total=o=>{const b=Object.entries(o.items).reduce((s,[g,q])=>s+G[g].p*q,0);return o.express?Math.round(b*1.5):b};
+const itemsTxt=o=>Object.entries(o.items).map(([g,q])=>q+"× "+G[g][lang]).join(", ");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pill=st=>`<span class="pill" style="background:${SCOL[st][0]};color:${SCOL[st][1]}">${t().st[st]}</span>`;
+
+// ── login
+function setLang(l){lang=l;document.documentElement.lang=l;["l","d"].forEach(p=>{document.getElementById(p+"-sw").classList.toggle("on",l==="sw");document.getElementById(p+"-en").classList.toggle("on",l==="en")});applyStatic();render()}
+function applyStatic(){const s=t();document.querySelectorAll("[data-t]").forEach(el=>{const k=el.dataset.t;if(s[k]!=null)el.innerHTML=s[k]});
+ document.getElementById("plans").innerHTML=s.plans.map((p,i)=>`<div class="plan ${i===1?"pop":""}">${i===1?`<span class="pill tag">${s.popular}</span>`:""}<h3>${p[0]}</h3><div class="for">${p[1]}</div><div class="price">${p[2]===0?s.free:TZS(p[2])}${p[2]?`<small>${s.perMonth}</small>`:""}</div><ul>${p[3].map(f=>`<li>${f}</li>`).join("")}</ul><button class="btn ${i===1?"btn-primary":"btn-outline"}" onclick="document.getElementById('u').scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('u').focus()">${s.choose}</button></div>`).join("");
+ document.getElementById("why").innerHTML=s.why.map(w=>`<div><div class="ic">${w[0]}</div><h3>${w[1]}</h3><p>${w[2]}</p></div>`).join("");
+ document.getElementById("pwt").textContent=document.getElementById("p").type==="password"?s.show:s.hide;
+ document.querySelector(".status span").textContent=open?s.online:s.offline;}
+function setRole(r){role="owner"}
+function togglePw(){const p=document.getElementById("p");p.type=p.type==="password"?"text":"password";document.getElementById("pwt").textContent=p.type==="password"?t().show:t().hide}
+function fillDemo(){document.getElementById("u").value="0753 010 010";document.getElementById("p").value="dobi2026";document.getElementById("err").style.display="none"}
+function doLogin(){const u=document.getElementById("u").value.replace(/\s/g,""),p=document.getElementById("p").value;
+  if(u==="0753010010"&&p==="dobi2026"){document.getElementById("err").style.display="none";document.getElementById("login").style.display="none";window.scrollTo(0,0);document.getElementById("dash").classList.add("on");tab="requests";render();setTimeout(()=>simulate(),9000)}
+ else{document.getElementById("err").style.display="block"}}
+function logout(){document.getElementById("dash").classList.remove("on");document.getElementById("login").style.display="block";document.getElementById("p").value=""}
+
+// ── dashboard
+function toggleOpen(){open=!open;document.getElementById("sw").classList.toggle("on",open);document.getElementById("stdot").style.background=open?"var(--green)":"var(--rose)";document.getElementById("stdot").style.boxShadow=open?"0 0 0 4px rgba(27,158,107,.18)":"0 0 0 4px rgba(214,69,96,.18)";document.querySelector(".status span").textContent=open?t().online:t().offline;toast(open?t().toastOn:t().toastOff)}
+function toast(msg){const el=document.getElementById("toast");document.getElementById("toasttxt").textContent=msg;el.classList.add("on");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("on"),3200)}
+function simulate(){if(!open)return;const n=NEXT[nextIdx%NEXT.length];nextIdx++;const o={...n,id:"DH-"+nextId++,stage:"requested",paid:false,min:0,placed:t().sw?"":"",placed:"Sasa hivi",fresh:true};orders.unshift(o);toast(`🔔 ${t().toastNew} ${o.cust} · ${TZS(total(o))}`);try{document.getElementById("ding").play().catch(()=>{})}catch(e){}render();setTimeout(()=>{o.fresh=false},600)}
+function accept(id){const o=orders.find(x=>x.id===id);o.stage="booked";toast(`✓ ${o.id} — ${t().toastAcc}`);render()}
+function decline(id){const o=orders.find(x=>x.id===id);o.stage="declined";toast(`${o.id} — ${t().toastDec}`);render()}
+function setStage(id,st){orders.find(x=>x.id===id).stage=st;render()}
+function togglePaid(id){const o=orders.find(x=>x.id===id);o.paid=!o.paid;render()}
+
+function reqCard(o){const s=t();const svc=o.svc==="pd"?s.svcPD:o.svc==="po"?s.svcPO:s.svcDrop;
+ return `<div class="card req ${o.fresh?"new":""}"><div class="h"><div class="who"><b>${esc(o.cust)}</b> <span class="mono muted" style="letter-spacing:.12em">${o.id}</span>${o.express?` <span class="pill" style="background:var(--coral);color:#fff">⚡ EXPRESS</span>`:""}<small>📞 ${o.phone} · ${o.placed} · <span class="timer">${s.respond} ${Math.max(1,10-o.min)} ${s.ago.replace(" zilizopita","").replace(" ago","")}</span></small></div><div class="amt">${TZS(total(o))}</div></div>
+ <div class="det"><div><b>${s.items}:</b> ${esc(itemsTxt(o))}</div><div><b>${s.svc}:</b> ${svc}${o.svc!=="po"?` · 📍 ${esc(o.addr)} · ${o.dist} ${s.dist}`:""}</div>${o.svc!=="drop"?`<div><b>${s.slot}:</b> ${o.slot}</div>`:""}${o.note?`<div><b>${s.note}:</b> ${esc(o.note)}</div>`:""}<div><b>${s.pay}:</b> ${s.payLater}</div></div>
+ <div class="act"><button class="btn btn-green btn-sm" onclick="accept('${o.id}')">${s.accept}</button><button class="btn btn-red btn-sm" onclick="decline('${o.id}')">${s.decline}</button></div></div>`}
+function orderRow(o){const s=t();const editable=!["requested","done","declined"].includes(o.stage);
+ return `<div class="order"><div><div class="id mono">${o.id}</div><b>${esc(o.cust)}</b><small>${esc(itemsTxt(o))}${o.express?" · ⚡":""} · ${o.placed}</small></div>
+ <div class="r"><span style="font-weight:800;font-size:14px">${TZS(total(o))}</span><div style="display:flex;gap:6px;align-items:center">
+ <button class="pill" style="background:${o.paid?"#E1F6EA":"#FCE4EA"};color:${o.paid?"#157347":"#B92B4B"}" onclick="togglePaid('${o.id}')">${o.paid?s.paid:s.unpaid}</button>
+ ${editable?`<select class="stagesel" onchange="setStage('${o.id}',this.value)">${STAGES.filter(x=>x!=="requested").map(x=>`<option value="${x}" ${o.stage===x?"selected":""}>${s.st[x]}</option>`).join("")}</select>`:pill(o.stage)}</div></div></div>`}
+
+function render(){const s=t();if(!document.getElementById("dash").classList.contains("on"))return;
+ const reqs=orders.filter(o=>o.stage==="requested"),active=orders.filter(o=>!["requested","done","declined"].includes(o.stage)),ready=orders.filter(o=>o.stage==="ready"),rev=orders.filter(o=>o.placed.startsWith("Leo")||o.placed==="Sasa hivi").filter(o=>o.stage!=="declined").reduce((a,o)=>a+total(o),0);
+ document.getElementById("snav").innerHTML=Object.entries(s.nav).map(([k,l])=>`<button class="${tab===k?"on":""}" onclick="tab='${k}';render()">${{requests:"🔔",orders:"⬡",today:"📅",stats:"▤"}[k]} ${l}${k==="requests"&&reqs.length?`<span class="n">${reqs.length}</span>`:""}</button>`).join("");
+ document.getElementById("pagetitle").textContent=s.nav[tab];
+ let html=`<div class="stats"><div class="card stat ${reqs.length?"hot":""}"><small>${s.sNew}</small><b>${reqs.length}</b></div><div class="card stat"><small>${s.sActive}</small><b>${active.length}</b></div><div class="card stat"><small>${s.sReady}</small><b>${ready.length}</b></div><div class="card stat"><small>${s.sRev}</small><b>${TZS(rev)}</b></div></div>`;
+ if(tab==="requests"){html+=`<div class="cols"><div><h3 class="sec">${s.incoming} ${reqs.length?`<span class="n">${reqs.length}</span>`:""}<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="simulate()">${s.simulate}</button></h3>${reqs.length?reqs.map(reqCard).join(""):`<div class="card empty">${s.noReq}</div>`}
+  <h3 class="sec">${s.recent}</h3><div class="card">${orders.filter(o=>o.stage!=="requested").slice(0,5).map(orderRow).join("")}</div></div>
+  <div class="side"><div class="card"><h4>${s.perf}</h4><div class="kv"><span>${s.accRate}</span><b>96%</b></div><div class="kv"><span>${s.avgResp}</span><b>4 min</b></div><div class="kv"><span>${s.rating}</span><b>★ 4.8</b></div><div class="kv"><span>${s.repeat}</span><b>62%</b></div></div>
+  <div class="card"><h4>💡 ${s.tips}</h4><div class="muted" style="display:grid;gap:6px"><div>• ${s.tip1}</div><div>• ${s.tip2}</div><div>• ${s.tip3}</div></div></div></div></div>`}
+ if(tab==="orders"){const list=orders.filter(o=>filt==="all"||o.stage===filt);html+=`<div class="filt" style="margin-top:16px"><button class="fchip ${filt==="all"?"on":""}" onclick="filt='all';render()">${s.stagesAll}</button>${STAGES.concat(["declined"]).map(x=>`<button class="fchip ${filt===x?"on":""}" onclick="filt='${x}';render()">${s.st[x]}</button>`).join("")}</div><div class="card">${list.length?list.map(orderRow).join(""):`<div class="empty">—</div>`}</div>`}
+ if(tab==="today"){const p=orders.filter(o=>o.stage==="booked"&&o.svc!=="drop"),d=orders.filter(o=>["ready","out"].includes(o.stage)&&o.svc!=="po"),w=orders.filter(o=>["received","washing","drying","folding"].includes(o.stage));
+  html+=`<div class="cols"><div><h3 class="sec">📥 ${s.pickups} (${p.length})</h3><div class="card">${p.length?p.map(o=>`<div class="order"><div><b>${esc(o.cust)}</b><small>📍 ${esc(o.addr)} · ${o.slot} · ${o.dist} km</small></div><div class="r">${pill(o.stage)}</div></div>`).join(""):`<div class="empty">—</div>`}</div>
+  <h3 class="sec">📤 ${s.deliveries} (${d.length})</h3><div class="card">${d.length?d.map(o=>`<div class="order"><div><b>${esc(o.cust)}</b><small>📍 ${esc(o.addr)} · ${o.dist} km</small></div><div class="r">${pill(o.stage)}</div></div>`).join(""):`<div class="empty">—</div>`}</div></div>
+  <div><h3 class="sec">🫧 ${s.inShop} (${w.length})</h3><div class="card">${w.length?w.map(orderRow).join(""):`<div class="empty">—</div>`}</div></div></div>`}
+ if(tab==="stats"){const days=[42000,55500,38000,61000,47500,70000,rev],max=Math.max(...days),lab=["J-6","J-5","J-4","J-3","J-2","Jana","Leo"];
+  html+=`<div class="cols"><div class="card" style="padding:16px"><h4 style="font-weight:800;margin-bottom:12px">${s.sRev.replace(" leo","").replace(" today","")} — 7d</h4><div style="display:flex;align-items:flex-end;gap:8px;height:150px">${days.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px"><div style="width:100%;border-radius:6px 6px 0 0;background:${i===6?"var(--blue)":"#C6D8F0"};height:${Math.max(4,v/max*100)}%"></div><small class="muted">${lab[i]}</small></div>`).join("")}</div></div>
+  <div class="side"><div class="card"><h4>${s.perf}</h4><div class="kv"><span>${s.accRate}</span><b>96%</b></div><div class="kv"><span>${s.avgResp}</span><b>4 min</b></div><div class="kv"><span>${s.rating}</span><b>★ 4.8</b></div><div class="kv"><span>${s.repeat}</span><b>62%</b></div></div></div></div>`}
+ document.getElementById("content").innerHTML=html;
+}
+applyStatic();
+</script>
+</body>
+</html>
